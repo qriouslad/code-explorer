@@ -5,7 +5,7 @@ Donate link: https://paypal.me/qriouslad
 Tags: directory browser, file explorer, code viewer, developer  
 Requires at least: 4.8  
 Tested up to: 5.9.3  
-Stable tag: 1.0.0  
+Stable tag: 1.0.1  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -42,7 +42,11 @@ Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/
 
 ## Changelog
 
-### 1.0.0 (April 2022)
+### 1.0.1 (2022.04.27)
+
+* Initial stable release. Implement directory browsing with file viewing, download and deletion.
+
+### 1.0.0 (2022.04.27)
 
 * Initial stable release. Implement directory browsing with file viewing, download and deletion.
 
