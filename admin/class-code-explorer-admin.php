@@ -309,7 +309,7 @@ class Code_Explorer_Admin {
 
 				} else {
 
-			        $file_content = esc_textarea( file_get_contents( $file ) );
+			        $file_content = file_get_contents( $file );
 
 				}
 
@@ -379,11 +379,11 @@ class Code_Explorer_Admin {
 
 		        if ( isset( $language ) ) {
 
-		        	$code_class = ' class="language-' . $language . ' match-braces"';
+		        	$code_class = 'language-' . $language . ' match-braces';
 
 		        } else {
 
-		        	$code_class = ' class="match-braces"';
+		        	$code_class = ' match-braces';
 
 		        }
 
@@ -468,12 +468,12 @@ class Code_Explorer_Admin {
 				// Top part of file content
 
 				$html_output .= '<div class="viewer-nav viewer-top">
-										<a href="#" class="back-step" onclick="window.history.back()"><span>&#10132;</span>Back</a><span class="viewing">You are viewing <span class="filename">' . $filename . '</span></span>
+										<a href="#" class="back-step" onclick="window.history.back()"><span>&#10132;</span>Back</a><span class="viewing">You are viewing <span class="filename">' . esc_html( $filename ) . '</span></span>
 								</div>';
 
 				// File content viewer
 
-				$html_output .= '<div id="viewer-content"><pre class="line-numbers"><code' . $code_class . '>'. $file_content .'</code></pre></div>';
+				$html_output .= '<div id="viewer-content"><pre class="line-numbers"><code class="' . esc_attr( $code_class ) . '">'. esc_textarea( $file_content ) .'</code></pre></div>';
 
 				// Bottom part of file content
 
