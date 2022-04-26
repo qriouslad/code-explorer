@@ -1,8 +1,8 @@
 # Code Explorer
 
 Contributors: qriouslad  
-Donate link: https://paypal.me/qriouslad
-Tags: directory explorer, file explorer, code viewer, developer  
+Donate link: https://paypal.me/qriouslad  
+Tags: directory browser, file explorer, code viewer, developer  
 Requires at least: 4.8  
 Tested up to: 5.9.3  
 Stable tag: 1.0.0  
@@ -16,9 +16,9 @@ Fast directory explorer and file/code viewer with syntax highlighting.
 
 ## Description
 
-Code Explorer allows you to swiftly browse through the directories and files in your WordPress installation. A good alternative for [File Manager](https://wordpress.org/plugins/wp-file-manager/), [Filester - File Manager Pro](https://wordpress.org/plugins/filester/) and [Advanced File Manager](https://wordpress.org/plugins/file-manager-advanced/) if your primary focus is viewing directory content and the code in files for your dev work. It uses [prism.js](https://prismjs.com/) to highlight code syntax in files commonly used throughout the WordPress development cycle such as PHP, HTML, Javascript, CSS, JSON and Markdown files.
+Code Explorer allows you to swiftly browse through the directories and files in your WordPress installation. A good alternative to a full-fledged [File Manager](https://wordpress.org/plugins/wp-file-manager/) if your primary focus is **viewing directory content and the code inside the files** for your dev work, e.g. WordPress core files or theme/plugins files. 
 
-Code Explorer is based on the [Simple File Manager](https://github.com/jcampbell1/simple-file-manager) library by [John Campbell](https://github.com/jcampbell1).
+It uses [prism.js](https://prismjs.com/) to **highlight code syntax in files** commonly used throughout the WordPress development cycle such as PHP, HTML, Javascript, CSS, JSON and Markdown files. Code Explorer is based on the [Simple File Manager](https://github.com/jcampbell1/simple-file-manager) library by [John Campbell](https://github.com/jcampbell1).
 
 ### Give Back
 
@@ -44,7 +44,7 @@ Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/
 
 ### 1.0.0 (April 2022)
 
-* Initial stable release
+* Initial stable release. Implement directory browsing with file viewing, download and deletion.
 
 ## Upgrade Notice
 
