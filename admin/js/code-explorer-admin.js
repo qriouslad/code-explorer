@@ -29,4 +29,16 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	$(document).ready( function() {
+
+        var addReview = '<a href="https://wordpress.org/plugins/code-explorer/#reviews" target="_blank" class="header-action"><span>&starf;</span> Review</a>';
+        var giveFeedback = '<a href="https://wordpress.org/support/plugin/code-explorer/" target="_blank" class="header-action">&#10010; Feedback</a>';
+        var donate = '<a href="https://paypal.me/qriouslad" target="_blank" class="header-action">&#10084; Donate</a>';
+
+        $(donate).prependTo('.csf-header-right');
+        $(giveFeedback).prependTo('.csf-header-right');
+        $(addReview).prependTo('.csf-header-right');
+
+	});
+
 })( jQuery );
