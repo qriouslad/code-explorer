@@ -122,6 +122,11 @@ class Code_Explorer {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-code-explorer-public.php';
 
+		/**
+		 * Include CodeStar framework
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'vendor/codestar-framework/codestar-framework.php';
+
 		$this->loader = new Code_Explorer_Loader();
 
 	}
