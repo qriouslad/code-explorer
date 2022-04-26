@@ -149,6 +149,28 @@ class Code_Explorer {
 	}
 
 	/**
+	 * Check if current screen is this plugin's main page
+	 *
+	 * @since 1.0.0
+	 */
+	public function is_ce() {
+
+		// e.g. https://www.domain.com/wp-admin/tools.php?page=simple-file-manager
+		$request_uri = sanitize_text_field( $_SERVER['REQUEST_URI'] );
+
+		if ( strpos( $request_uri, 'tools.php?page=' . $this->plugin_name ) !== false ) {
+
+			return true; // Yes, this is the plugin's main page
+
+		} else {
+
+			return false; // No, this is not the plugin's main page
+
+		}
+
+	}
+
+	/**
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
@@ -161,6 +183,20 @@ class Code_Explorer {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'ce_remove_codestar_submenu' );
+
+		if ( is_admin() && $this->is_ce() ) {
+
+			$this->loader->add_action( 'csf_loaded', $plugin_admin, 'ce_main_page' );
+
+		} else {
+
+			$this->loader->add_action( 'admin_menu', $plugin_admin, 'ce_register_submenu' );
+
+		}
+
+		$this->loader->add_filter( 'plugin_action_links_'.$this->plugin_name.'/'.$this->plugin_name.'.php', $plugin_admin, 'ce_plugin_action_links' );
 
 	}
 
@@ -175,8 +211,8 @@ class Code_Explorer {
 
 		$plugin_public = new Code_Explorer_Public( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 	}
 
