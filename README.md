@@ -46,10 +46,6 @@ Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/
 
 * Initial stable release. Implement directory browsing with file viewing, download and deletion.
 
-### 1.0.0 (2022.04.27)
-
-* Initial stable release. Implement directory browsing with file viewing, download and deletion.
-
 ## Upgrade Notice
 
 None required yet.
