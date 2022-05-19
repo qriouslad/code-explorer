@@ -359,6 +359,10 @@ class Code_Explorer_Admin {
 		        		$language = 'markup';
 		        		break;
 
+		        	case 'pot':
+		        		$language = 'markup';
+		        		break;
+
 		        	case 'txt':
 		        		$language = 'markup';
 		        		break;
