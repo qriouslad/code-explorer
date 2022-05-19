@@ -181,12 +181,12 @@ class Code_Explorer {
 
 		$plugin_admin = new Code_Explorer_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'ce_remove_codestar_submenu' );
 
 		if ( is_admin() && $this->is_ce() ) {
+
+			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 			$this->loader->add_action( 'csf_loaded', $plugin_admin, 'ce_main_page' );
 
