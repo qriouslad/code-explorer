@@ -5,7 +5,7 @@ Donate link: https://paypal.me/qriouslad
 Tags: directory browser, file explorer, code viewer, developer  
 Requires at least: 4.8  
 Tested up to: 5.9.3  
-Stable tag: 1.1.0  
+Stable tag: 1.2.0  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,7 +16,9 @@ Fast directory explorer and file/code viewer with syntax highlighting.
 
 ## Description
 
-Code Explorer allows you to swiftly browse through the directories and files in your WordPress installation. A good alternative to a full-fledged [File Manager](https://wordpress.org/plugins/wp-file-manager/) if your primary focus is **viewing directory content and the code inside the files** for your dev work, e.g. WordPress core files or theme/plugins files. It uses [prism.js](https://prismjs.com/) to **highlight code syntax in files** commonly used throughout the WordPress development cycle such as PHP, HTML, Javascript, CSS, JSON and Markdown files. 
+Code Explorer allows you to swiftly browse through the directories and files in your WordPress installation. A good alternative to a full-fledged [File Manager](https://wordpress.org/plugins/wp-file-manager/) if your primary focus is **viewing directory content and the code inside the files** for your dev work, e.g. WordPress core files or theme/plugins files. It uses [prism.js](https://prismjs.com/) to **highlight code syntax in files** commonly used throughout the WordPress development cycle such as PHP, HTML, Javascript, CSS, JSON and Markdown files.
+
+You can also edit theme and plugin files using WordPress core's file editor if it is not disabled via the DISALLOW_FILE_EDIT constant. Do proceed with great caution in editing as you can break your site if you don't know what you're doing.
 
 ### Give Back
 
@@ -40,9 +42,13 @@ Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/
 
 ## Changelog
 
+### 1.2.0 (2022.05.20)
+
+* Enable editing of theme and plugin files using WordPress core's theme/plugin editor when it's not being disabled via the DISALLOW_FILE_EDIT constant.
+
 ### 1.1.0 (2022.05.19)
 
-* Only load CSS and JS files on Code Explorer page
+* Only load CSS and JS files on Code Explorer page.
 
 ### 1.0.1 (2022.04.27)
 
