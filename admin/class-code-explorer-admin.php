@@ -184,6 +184,27 @@ class Code_Explorer_Admin {
 
 				$deletion_nonce = wp_create_nonce( 'deletion-nonce_' . $_COOKIE['_ce_xsrf'] . $uid );
 
+				// Check if file and theme editor is disabled
+
+				if ( defined( 'DISALLOW_FILE_EDIT' ) && ( constant( 'DISALLOW_FILE_EDIT' ) === true ) ) {
+					$editing_enabled = false;
+				} else {
+					$editing_enabled = true;
+				}
+
+				// Get array of theme directories
+
+				$theme_directories = scandir( get_theme_root() );
+
+				// Get array of plugin main files and plugin directories
+
+				$plugins = get_plugins();
+				$plugin_files = array();
+
+				foreach ( $plugins as $plugin_file => $plugin_data ) {
+					$plugin_files[] = $plugin_file;
+				}
+
 				// Return list of directories and files data for frontend AJAX request
 
 				if ( is_dir( $file ) ) {
@@ -196,18 +217,71 @@ class Code_Explorer_Admin {
 
 						$i = $directory . '/' . $entry;
 						$path = preg_replace('@^\./@', '', $i);
+						$relpath = str_replace( ABSPATH, '', $i );
+						$stat = stat($i);
 						$mime_type = $this->ce_mime_type( $path );
 
-						// Check if $path is viewable or not
+						$edit_path = '';
+
+						// Check if $path is editable or not
 
 						if ( ( strpos( $mime_type, 'text' ) !== false ) || ( strpos( $mime_type, 'php' ) !== false ) || ( strpos( $mime_type, 'json' ) !== false ) || ( strpos( $mime_type, 'html' ) !== false ) || ( strpos( $mime_type, 'empty' ) !== false ) ) {
 
 							$is_viewable = true;
 
+							if ( $this->ce_is_wpcore_path( $path ) ) {
+
+								$is_editable = false;
+
+							} else {
+
+									$edit_selector = '';
+
+									if ( strpos( $path, 'wp-content/themes' ) !== false ) {
+
+										$path_parts = explode( "/", $relpath );
+										$edit_dir = $path_parts[2]; // theme directory name
+										do_action( 'inspect', [ 'edit_dir', $edit_dir ] );
+
+										foreach( $theme_directories as $theme_directory) {
+											if ( strpos( $theme_directory, $edit_dir ) !== false ) {
+												$edit_selector = $theme_directory;
+											}
+										}
+
+										$is_editable = true;
+										$edit_path = str_replace( 'wp-content/themes/' . $edit_dir . '/', '', $relpath );;
+										$editable_type = 'theme';
+
+									} elseif ( strpos( $path, 'wp-content/plugins' ) !== false ) {
+
+										$path_parts = explode( "/", $relpath );
+										$edit_dir = $path_parts[2]; // plugin directory name, e.g. my-plugin
+
+										foreach( $plugin_files as $plugin_file) {
+											if ( strpos( $plugin_file, $edit_dir . '/' ) !== false ) {
+												$edit_selector = $plugin_file; // plugin main file, e.g. my-plugin/my-plugin.php
+											}
+										}
+
+										$is_editable = true;
+										$edit_path = str_replace( 'wp-content/plugins/', '', $relpath );
+										$editable_type = 'plugin';
+									}
+
+							}
+
 						} else {
-
 							$is_viewable = false;						
+							$is_editable = false;
+						}
 
+						// If path is directory, overwrite editable data
+
+						if ( is_dir( $i ) ) {
+							$is_editable = false;
+							$editable_type = 'none';
+							$edit_selector = '';
 						}
 
 						// Check if $path is downloadable or not
@@ -242,9 +316,6 @@ class Code_Explorer_Admin {
 
 						}
 
-						$relpath = str_replace( ABSPATH, '', $i );
-						$stat = stat($i);
-
 						$result[] = [
 							'mtime' => $stat['mtime'],
 							'size' => $stat['size'],
@@ -254,6 +325,10 @@ class Code_Explorer_Admin {
 							'mime_type'	=> $mime_type,
 							'is_dir' => is_dir($i),
 							'is_viewable' => $is_viewable,
+							'is_editable' => $is_editable,
+							'editable_type'	=> $editable_type,
+							'edit_path'	=> $edit_path,
+							'edit_selector' => $edit_selector,
 							'is_downloadable' => $is_downloadable,
 							'is_deletable' => $allow_delete && ( (!is_dir($i) && is_writable( $directory ) ) || ( is_dir($i) && is_writable($directory) && $this->ce_is_recursively_deleteable($i) ) ) && $is_deletable,
 							'deletion_nonce' => $deletion_nonce,
@@ -275,6 +350,7 @@ class Code_Explorer_Admin {
 						'is_writable' => is_writable($file), 
 						'abspath' => $abspath,
 						'abspath_hash' => $abspath_hash,
+						'editing_enabled' => $editing_enabled,
 						'results' =>$result
 					]);
 					exit;
@@ -285,7 +361,8 @@ class Code_Explorer_Admin {
 						'success' => false,
 						'abspath' => $abspath,
 						'abspath_hash' => $abspath_hash,
-						'error_message' => '/' . $relpath . ' does not exist.' 
+						'editing_enabled' => $editing_enabled,
+						'error_message' => '/' . $relpath . ' does not exist.'
 					]);
 					exit;
 
@@ -356,6 +433,10 @@ class Code_Explorer_Admin {
 		        		break;
 
 		        	case 'po':
+		        		$language = 'markup';
+		        		break;
+
+		        	case 'pot':
 		        		$language = 'markup';
 		        		break;
 
@@ -654,7 +735,7 @@ class Code_Explorer_Admin {
 	/** 
 	 * Check if path is part of WP core folders and files
 	 *
-	 * @since 1.3.0
+	 * @since 1.0.0
 	 */
 	public function ce_is_wpcore_path( $path ) {
 
@@ -663,7 +744,9 @@ class Code_Explorer_Admin {
 			ABSPATH . 'wp-content',
 			ABSPATH . 'wp-includes',
 			ABSPATH . 'wp-content/plugins',
+			ABSPATH . 'wp-content/plugins/index.php',
 			ABSPATH . 'wp-content/themes',
+			ABSPATH . 'wp-content/themes/index.php',
 			ABSPATH . 'wp-content/uploads',
 			ABSPATH . 'wp-activate.php',
 			ABSPATH . 'wp-blog-header.php',

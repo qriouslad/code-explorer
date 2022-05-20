@@ -56,6 +56,10 @@
 				$('#list').append('<tr><td class="empty" colspan=5>' + data.error_message + '</td></tr>');
 			}
 
+			if ( data.editing_enabled === false ) {
+				$('.edit').hide();
+			}
+
 		},'json');
 	}
 
@@ -65,7 +69,19 @@
 			.attr('href', data.is_dir ? '#' + encodeURIComponent(data.path) : ( data.is_viewable ? '?page=code-explorer&do=view&file='+ encodeURIComponent(data.path) : '../' + data.relpath ) )
 			.text(data.name);
 
-		var $view_link = '<a href="?page=code-explorer&amp;do=view&amp;file=' + encodeURIComponent(data.path) + '" class="view">View</a>';		
+		var $view_link = '<a href="?page=code-explorer&amp;do=view&amp;file=' + encodeURIComponent(data.path) + '" class="view">View</a>';
+
+		if (data.is_editable) {
+			if ( data.editable_type == 'theme' ) {
+				var $editor_path = '/wp-admin/theme-editor.php?file=';
+				var $selector_path = '&theme=';
+			} else if ( data.editable_type == 'plugin' ) {
+				var $editor_path = '/wp-admin/plugin-editor.php?file=';
+				var $selector_path = '&plugin=';
+			} else {}
+		}
+
+		var $edit_link = '<a href="' + $editor_path + encodeURIComponent(data.edit_path) + $selector_path + encodeURIComponent(data.edit_selector) + '" class="edit" target="_blank">Edit</a>';
 
 		var $download_link = '<a href="?page=code-explorer&amp;do=download&amp;file=' + encodeURIComponent(data.path) + '" class="download">Download</a>';
 
@@ -75,6 +91,10 @@
 
 		if ( data.is_viewable ) {
 			$action_links += $view_link;
+		}
+
+		if ( data.is_editable ) {
+			$action_links += $edit_link;
 		}
 
 		if ( data.is_downloadable ) {
