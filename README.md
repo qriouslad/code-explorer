@@ -4,8 +4,8 @@ Contributors: qriouslad
 Donate link: https://paypal.me/qriouslad  
 Tags: directory browser, file explorer, code viewer, developer  
 Requires at least: 4.8  
-Tested up to: 5.9.3  
-Stable tag: 1.2.0  
+Tested up to: 6.0  
+Stable tag: 1.3.0  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -41,6 +41,11 @@ You can also edit theme and plugin files using WordPress core's file editor if i
 Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/devinvinson/WordPress-Plugin-Boilerplate/) | [wppb.me](https://wppb.me/) | [CodeStar framework](https://github.com/Codestar/codestar-framework). Code Explorer is based on the [Simple File Manager](https://github.com/jcampbell1/simple-file-manager) library by [John Campbell](https://github.com/jcampbell1).
 
 ## Changelog
+
+### 1.3.0 (2022.05.26)
+
+* Replace prism.js with CodeMirror library for syntax highlighting
+* Confirmed compatibility with WordPress 6.0
 
 ### 1.2.0 (2022.05.20)
 
