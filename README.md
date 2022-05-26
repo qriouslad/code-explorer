@@ -27,6 +27,12 @@ You can also edit theme and plugin files using WordPress core's file editor if i
 * [Github repo](https://github.com/qriouslad/code-explorer) to contribute code.
 * [Donate](https://paypal.me/qriouslad) and support my work.
 
+### Check These Out Too
+
+* [System Dashboard](https://wordpress.org/plugins/system-dashboard/): Central dashboard to monitor various WordPress components, processes and data, including the server.
+* [Variable Inspector](https://wordpress.org/plugins/variable-inspector/): Inspect PHP variables on a central dashboard in wp-admin for convenient debugging.
+* [Database Admin](https://github.com/qriouslad/database-admin): Securely manage your WordPress website's database with a clean and user-friendly interface based on a custom-themed Adminer app. Only available on Github.
+
 ## Screenshots
 
 1. The directory explorer
