@@ -75,7 +75,16 @@ class Code_Explorer_Admin {
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/code-explorer-admin.css', array(), $this->version, 'all' );
 
-		wp_enqueue_style( $this->plugin_name . '-prism', plugin_dir_url( __FILE__ ) . 'css/prism.css', array(), $this->version, 'all' );
+		if ( ( isset( $_GET['do'] ) ) && ( $_GET['do'] == 'view' ) ) {
+
+			wp_enqueue_style( $this->plugin_name . '-codemirror', plugin_dir_url( __FILE__ ) . 'css/codemirror/codemirror.css', array(), $this->version, 'all' );
+
+			wp_enqueue_style( $this->plugin_name . '-codemirror-theme-material-ocean', plugin_dir_url( __FILE__ ) . 'css/codemirror/theme/material-ocean.css', array(), $this->version, 'all' );
+
+			wp_enqueue_style( $this->plugin_name . '-codemirror-addon-foldgutter', plugin_dir_url( __FILE__ ) . 'css/codemirror/addon/foldgutter.css', array(), $this->version, 'all' );
+
+		}
+
 
 	}
 
@@ -98,8 +107,44 @@ class Code_Explorer_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name . '-prism', plugin_dir_url( __FILE__ ) . 'js/prism.js', array( 'jquery' ), $this->version, false );
+		if ( ( isset( $_GET['do'] ) ) && ( $_GET['do'] == 'view' ) ) {
 
+			wp_enqueue_script( $this->plugin_name . '-codemirror', plugin_dir_url( __FILE__ ) . 'js/codemirror/codemirror.min.js', array( 'jquery' ), $this->version, false );
+
+			// Modes - Languages
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-htmlmixed', plugin_dir_url( __FILE__ ) . 'js/codemirror/mode/htmlmixed.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-xml', plugin_dir_url( __FILE__ ) . 'js/codemirror/mode/xml.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-javascript', plugin_dir_url( __FILE__ ) . 'js/codemirror/mode/javascript.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-css', plugin_dir_url( __FILE__ ) . 'js/codemirror/mode/css.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-markdown', plugin_dir_url( __FILE__ ) . 'js/codemirror/mode/markdown.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-clike', plugin_dir_url( __FILE__ ) . 'js/codemirror/mode/clike.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-php', plugin_dir_url( __FILE__ ) . 'js/codemirror/mode/php.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			// Addon - Fold
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-fold-brace-fold', plugin_dir_url( __FILE__ ) . 'js/codemirror/addon/fold/brace-fold.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-fold-comment-fold', plugin_dir_url( __FILE__ ) . 'js/codemirror/addon/fold/comment-fold.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-fold-foldcode', plugin_dir_url( __FILE__ ) . 'js/codemirror/addon/fold/foldcode.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+			
+			wp_enqueue_script( $this->plugin_name . '-codemirror-fold-foldgutter', plugin_dir_url( __FILE__ ) . 'js/codemirror/addon/fold/foldgutter.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-fold-indent-fold', plugin_dir_url( __FILE__ ) . 'js/codemirror/addon/fold/indent-fold.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-fold-markdown-fold', plugin_dir_url( __FILE__ ) . 'js/codemirror/addon/fold/markdown-fold.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+			wp_enqueue_script( $this->plugin_name . '-codemirror-fold-xml-fold', plugin_dir_url( __FILE__ ) . 'js/codemirror/addon/fold/xml-fold.js', array( $this->plugin_name . '-codemirror' ), $this->version, false );
+
+		}
+ 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/code-explorer-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
@@ -394,78 +439,32 @@ class Code_Explorer_Admin {
 		        $filename = '/' . str_replace( ABSPATH, '', $file );
 		        $file_extension = pathinfo( $file, PATHINFO_EXTENSION );
 
-		        switch ( $file_extension ) {
+		        // Set CodeMirror mode based on file extension
 
-		        	case 'php':
-		        		$language = 'php';
-		        		break;
-
-		        	case 'html':
-		        		$language = 'markup';
-		        		break;
-
-		        	case 'xml':
-		        		$language = 'markup';
-		        		break;
-
-		        	case 'svg':
-		        		$language = 'markup';
-		        		break;
-
-		        	case 'js':
-		        		$language = 'javascript';
-		        		break;
-
-		        	case 'css':
-		        		$language = 'css';
-		        		break;
-
-		        	case 'md':
-		        		$language = 'markdown';
-		        		break;
-
-		        	case 'json':
-		        		$language = 'json';
-		        		break;
-
-		        	case 'lock':
-		        		$language = 'json';
-		        		break;
-
-		        	case 'po':
-		        		$language = 'markup';
-		        		break;
-
-		        	case 'pot':
-		        		$language = 'markup';
-		        		break;
-
-		        	case 'txt':
-		        		$language = 'markup';
-		        		break;
-
-		        	case '.htaccess':
-		        		$language = 'markup';
-		        		break;
-
-		        	case '.nginx':
-		        		$language = 'markup';
-		        		break;
-
-		        	case '':
-		        		$language = 'markup';
-		        		break;
-
-		        }
-
-		        if ( isset( $language ) ) {
-
-		        	$code_class = 'language-' . $language . ' match-braces';
-
+		        if ( $file_extension == 'php' ) {
+	        		$mode = 'application/x-httpd-php';
+		        } elseif ( $file_extension == 'html' ) {
+	        		$mode = 'text/html';
+		        } elseif ( $file_extension == 'xml' ) {
+	        		$mode = 'application/xml';
+		        } elseif ( $file_extension == 'svg' ) {
+	        		$mode = 'application/xml';
+		        } elseif ( $file_extension == 'js' ) {
+	        		$mode = 'application/javascript';
+		        } elseif ( $file_extension == 'css' ) {
+	        		$mode = 'text/css';
+		        } elseif ( $file_extension == 'md' ) {
+	        		$mode = 'text/x-markdown';
+		        } elseif ( $file_extension == 'json' ) {
+	        		$mode = 'application/json';
+		        } elseif ( $file_extension == 'lock' ) {
+	        		$mode = 'application/json';
+		        } elseif ( $file_extension == 'txt' ) {
+	        		$mode = 'text/plain';
+		        } elseif ( $file_extension == 'htaccess' ) {
+	        		$mode = '.htaccess';
 		        } else {
-
-		        	$code_class = ' match-braces';
-
+	        		$mode = 'text/plain';
 		        }
 
 			} elseif ( ( isset( $_GET['do'] ) ) && ( $_GET['do'] == 'download' ) ) {
@@ -546,6 +545,10 @@ class Code_Explorer_Admin {
 
 			} elseif ( isset( $_GET['do'] ) && ( $_GET['do'] == 'view' ) ) {
 
+				// Set CodeMirror to read only mode
+
+				$read_only = 'readOnly: true,';
+
 				// Top part of file content
 
 				$html_output .= '<div class="viewer-nav viewer-top">
@@ -554,24 +557,34 @@ class Code_Explorer_Admin {
 
 				// File content viewer
 
-				$html_output .= '<div id="viewer-content"><pre class="line-numbers"><code class="' . esc_attr( $code_class ) . '">'. esc_textarea( $file_content ) .'</code></pre></div>';
+				$html_output .= '<div id="editor-content"><textarea id="codemirror" rows="25">' . esc_textarea( $file_content ) . '</textarea></div>';
 
 				// Bottom part of file content
 
 				$html_output .= '<div class="viewer-nav viewer-bottom">
-										<a href="#" class="back-step" onclick="window.history.back()"><span>&#10132;</span>Back</a>
+										<a href="#" class="back-step" onclick="window.history.back()"><span>&#10132;</span>Back</a><span class="viewing">You are viewing <span class="filename">' . esc_html( $filename ) . '</span></span>
 								</div>';
 
+				// Script to handle CodeMirror behaviour
+
+				$html_output .= '<script>
+									jQuery(document).ready( function() {
+								        // CodeMirror editor
+								        var code = document.getElementById("codemirror");
+								        var editor = CodeMirror.fromTextArea(code, {
+								        	'.$read_only.'
+								        	mode: "'.$mode.'",
+								        	theme: "material-ocean",
+								        	lineNumbers: true,
+								        	lineWrapping: true,
+								        	extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
+								        	foldGutter: true,
+								        	gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+								        });
+									});
+								</script>';
+
 			} else {}
-
-
-			if ( empty( $file_content ) ) {
-
-			} else {
-
-
-
-			}
 
 			return $html_output;
 
