@@ -221,14 +221,12 @@
     white-space: break-spaces;
 }
 
-/* prism.js code highlighter */
-.ce div.code-toolbar>.toolbar>.toolbar-item>a, 
-.ce div.code-toolbar>.toolbar>.toolbar-item>button, 
-.ce div.code-toolbar>.toolbar>.toolbar-item>span {
-    font-size: 1em;
-    padding: 0 .5em .25em;
+/* CodeMirror */
+
+.ce .CodeMirror {
+    height: 100%;
 }
 
-.ce pre[class*=language-] {
-    margin: 0;
+.ce #editor-content textarea {
+    width: 100%;
 }
