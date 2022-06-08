@@ -5,7 +5,7 @@ Donate link: https://paypal.me/qriouslad
 Tags: directory browser, file explorer, code viewer, developer  
 Requires at least: 4.8  
 Tested up to: 6.0  
-Stable tag: 1.3.1  
+Stable tag: 1.3.2  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -27,6 +27,12 @@ You can also edit theme and plugin files using WordPress core's file editor if i
 * [Github repo](https://github.com/qriouslad/code-explorer) to contribute code.
 * [Donate](https://paypal.me/qriouslad) and support my work.
 
+### Check These Out Too
+
+* [System Dashboard](https://wordpress.org/plugins/system-dashboard/): Central dashboard to monitor various WordPress components, processes and data, including the server.
+* [Variable Inspector](https://wordpress.org/plugins/variable-inspector/): Inspect PHP variables on a central dashboard in wp-admin for convenient debugging.
+* [Database Admin](https://github.com/qriouslad/database-admin): Securely manage your WordPress website's database with a clean and user-friendly interface based on a custom-themed Adminer app. Only available on Github.
+
 ## Screenshots
 
 1. The directory explorer
@@ -41,6 +47,10 @@ You can also edit theme and plugin files using WordPress core's file editor if i
 Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/devinvinson/WordPress-Plugin-Boilerplate/) | [wppb.me](https://wppb.me/) | [CodeStar framework](https://github.com/Codestar/codestar-framework). Code Explorer is based on the [Simple File Manager](https://github.com/jcampbell1/simple-file-manager) library by [John Campbell](https://github.com/jcampbell1).
 
 ## Changelog
+
+### 1.3.2 (2022.06.09)
+
+* Fix "Call to undefined function get_plugins()" error
 
 ### 1.3.1 (2022.05.26)
 

@@ -243,6 +243,11 @@ class Code_Explorer_Admin {
 
 				// Get array of plugin main files and plugin directories
 
+				// Check if get_plugins() function exists. If not, require it.
+				if ( ! function_exists( 'get_plugins' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/plugin.php';
+				}
+
 				$plugins = get_plugins();
 				$plugin_files = array();
 
