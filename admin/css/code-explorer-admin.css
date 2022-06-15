@@ -51,20 +51,70 @@
 }
 
 .ce #top {
+    display: flex;
     height:auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 8px 0;
+    gap: 8px;
 }
 
-.ce #breadcrumb { 
-    padding-top: 8px;
-    padding-bottom: 8px;
+.ce #breadcrumb {
     font-size:14px;
+    line-height: 2.15384615;
+    min-height: 30px;
     color:#aaa;
     display:inline-block;
-    float:left;
 }
 
 .ce .breadcrumb-links {
     min-height: 20px;
+}
+
+.ce .action-buttons {
+    width: 23%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ce .action-buttons button {
+    margin-left: 8px;
+}
+
+.ce .action-buttons button:first-child {
+    margin-left: 0;
+}
+
+.ce .action-inputs {
+    position: absolute;
+    left: -1000vw;
+    width: 100%;
+    box-sizing: border-box;
+    background: #FAFBFC;
+    border: 1px solid #E3E8EE;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.ce .action-inputs input[type="text"] {
+    margin-right: 8px;
+    width: 15em;
+}
+
+.ce .cancel-action {
+    margin-left: 8px;
+}
+
+.ce .action-newfile,
+.ce .action-newfolder {
+    visibility: hidden;
+    height: 0;
+}
+
+.ce .action-newfile,
+.ce .action-newfolder {
+    text-align: center;
 }
 
 .ce .back-step {

@@ -225,8 +225,14 @@ class Code_Explorer_Admin {
 
 			if ( ( isset( $_GET['do'] ) ) && ( $_GET['do'] == 'list' ) ) {
 
-				// Create deletion nonce for javascript
+				// Define variables early / with default values
+				
+				$show_action_buttons = false;
 
+				// Create nonces for javascript
+
+                $create_file_nonce = wp_create_nonce( 'create-file_' . $_COOKIE['_sfm_xsrf'] . $uid );
+                $create_folder_nonce = wp_create_nonce( 'create-folder_'. $_COOKIE['_sfm_xsrf'] . $uid );
 				$deletion_nonce = wp_create_nonce( 'deletion-nonce_' . $_COOKIE['_ce_xsrf'] . $uid );
 
 				// Check if file and theme editor is disabled
@@ -317,6 +323,7 @@ class Code_Explorer_Admin {
 										$is_editable = true;
 										$edit_path = str_replace( 'wp-content/plugins/', '', $relpath );
 										$editable_type = 'plugin';
+
 									}
 
 							}
@@ -332,6 +339,7 @@ class Code_Explorer_Admin {
 							$is_editable = false;
 							$editable_type = 'none';
 							$edit_selector = '';
+
 						}
 
 						// Check if $path is downloadable or not
@@ -389,6 +397,14 @@ class Code_Explorer_Admin {
 
 					}
 
+					// Show action buttons inside /plugins or /themes folder
+
+					if ( ( strpos( $directory, 'wp-content/themes' ) !== false ) || ( strpos( $directory, 'wp-content/plugins' ) !== false ) ) {
+
+						$show_action_buttons = true; // to show buttons like "add file" and "add folder"
+
+					}
+
 					usort($result,function($f1,$f2){
 						$f1_key = ($f1['is_dir']?:2) . $f1['name'];
 						$f2_key = ($f2['is_dir']?:2) . $f2['name'];
@@ -401,6 +417,9 @@ class Code_Explorer_Admin {
 						'abspath' => $abspath,
 						'abspath_hash' => $abspath_hash,
 						'editing_enabled' => $editing_enabled,
+						'show_action_buttons' => $show_action_buttons,
+						'create_file_nonce' => $create_file_nonce,
+						'create_folder_nonce' => $create_folder_nonce,
 						'results' =>$result
 					]);
 					exit;
@@ -412,6 +431,7 @@ class Code_Explorer_Admin {
 						'abspath' => $abspath,
 						'abspath_hash' => $abspath_hash,
 						'editing_enabled' => $editing_enabled,
+						'show_action_buttons' => $show_action_buttons,
 						'error_message' => '/' . $relpath . ' does not exist.'
 					]);
 					exit;
@@ -499,6 +519,96 @@ class Code_Explorer_Admin {
 
 				exit;
 
+			} elseif ( ( isset( $_GET['do'] ) ) && ( $_GET['do'] == 'createfile' ) ) {
+
+				// Create new file
+
+				if ( ! is_file( $file ) ) {
+
+					$nonce = $_GET['_cfilenonce'];
+
+					if ( !empty( $nonce ) && wp_verify_nonce( $nonce, 'create-file_' . $_COOKIE['_sfm_xsrf'] . $uid ) ) {
+
+						$result = file_put_contents( $file, '' );
+
+					} else {
+
+						$result = false;
+
+					}
+
+					if ( $result !== false ) {
+
+						echo json_encode([
+							'success' => true,
+							'message' => 'File has been created.'
+						]);
+
+					} else {
+
+						echo json_encode([
+							'success' => false,
+							'message' => 'File was not created.'
+						]);
+
+					}
+
+				} else {
+
+					$file_array = explode('/', $file);
+
+					$new_file_name = array_pop( $file_array ); 
+
+					echo json_encode([
+						'success' => false,
+						'message' => 'The file \'' . $new_file_name . '\' already exists. Please pick another file name.'
+					]);
+
+				}
+
+				exit;
+
+			} elseif ( ( isset( $_GET['do'] ) ) && ( $_GET['do'] == 'createfolder' ) ) {
+
+				$file_array = explode('/', $file);
+
+				$new_folder_name = array_pop( $file_array ); 
+
+				// Create new folder
+
+				if ( ! is_dir( $file ) ) {
+
+					$nonce = $_GET['_cfoldernonce'];
+
+					if ( !empty( $nonce ) && wp_verify_nonce( $nonce, 'create-folder_' . $_COOKIE['_sfm_xsrf'] . $uid ) ) {
+
+						mkdir( $file );
+
+						echo json_encode([
+							'success' => true,
+							'message' => 'Folder has been created.'
+						]);
+
+					} else {
+
+						echo json_encode([
+							'success' => false,
+							'message' => 'Nonce check failed. Folder was not created.'
+						]);
+
+					}
+
+				} else {
+
+					echo json_encode([
+						'success' => false,
+						'message' => 'The \'' . $new_folder_name . '\' folder already exists. Please pick another folder name.'
+					]);
+
+				}
+
+				exit;
+
 			} elseif ( ( isset( $_POST['do'] ) ) && ( $_POST['do'] == 'delete' ) ) {
 
 				// Delete file or folder (recursively)
@@ -539,8 +649,10 @@ class Code_Explorer_Admin {
 
 				$html_output .= '<div id="top">
 									<div id="breadcrumb">&nbsp;</div>
-								</div>
-								<table id="table"><thead><tr>
+									<div id="action-buttons" class="action-buttons"></div>
+								</div>';
+				$html_output .= '<div id="action-inputs" class="action-inputs"></div>';
+				$html_output .= '<table id="table"><thead><tr>
 									<th>Name</th>
 									<th class="th-actions">Actions</th>
 									<th>Size</th>
