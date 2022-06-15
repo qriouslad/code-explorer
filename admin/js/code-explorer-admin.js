@@ -56,12 +56,139 @@
 					if (actionInputsDiv.childNodes.length === 0) {
 						$('#action-inputs').append(createFileInput + createFolderInput);
 					}
+
+					$('.newfile-button').on('click', function(e) {
+
+						e.preventDefault();
+
+						$('.action-inputs').css("position","initial");
+						$('.action-inputs').css("left","unset");
+						$('.action-newfile').css("visibility","visible");
+						$('.action-newfile').css("height","auto");
+
+						$('.action-newfolder').css("visibility","hidden");
+						$('.action-newfolder').css("height","0px");
+
+					});
+
+					$('.newfolder-button').on('click', function(e) {
+
+						e.preventDefault();
+
+						$('.action-inputs').css("position","initial");
+						$('.action-inputs').css("left","unset");
+						$('.action-newfolder').css("visibility","visible");
+						$('.action-newfolder').css("height","auto");
+
+						$('.action-newfile').css("visibility","hidden");
+						$('.action-newfile').css("height","0px");
+
+					});
+
+					$('.cancel-action').on('click', function(e) {
+
+						e.preventDefault();
+
+						$('.action-inputs').css("position","absolute");
+						$('.action-inputs').css("left","-1000vw");
+
+						$('.action-newfile').css("visibility","hidden");
+						$('.action-newfile').css("height","0px");
+						$('.action-newfolder').css("visibility","hidden");
+						$('.action-newfolder').css("height","0px");
+
+					});
+
+					// Create file
+
+					$('#create-file').on('click', function(e) {
+						var fileName = document.getElementById("new-filename").value;
+
+						if (fileName === "") {
+							alert("Please enter the file name first.");
+							e.preventDefault();
+						} else {
+							createFile(fileName);
+
+							$('.action-inputs').css("position","absolute");
+							$('.action-inputs').css("left","-1000vw");
+
+							e.preventDefault();
+						}
+					});
+
+					// if ($('#action-newfile').length) {
+
+						// var filenameInput = document.getElementById("new-filename");
+
+						// Execute a function when the user releases a key on the keyboard
+						// filenameInput.addEventListener("keyup", function(e) {
+
+							// Number 13 is the "Enter" key on the keyboard
+					// 		if (e.keyCode == 13 ) {
+
+					// 			e.preventDefault();
+
+					// 			document.getElementById("create-file").click();
+
+					// 			$('.action-inputs').css("position","absolute");
+					// 			$('.action-inputs').css("left","-1000vw");
+
+					// 		}
+
+					// 	});
+
+					// }
+
+					// Create folder
+
+					$('#create-folder').on('click', function(e) {
+						var folderName = document.getElementById("new-foldername").value;
+
+						if (folderName === "") {
+							alert("Please enter the folder name first.");
+							e.preventDefault();
+						} else {
+							createFolder(folderName);
+
+							$('.action-inputs').css("position","absolute");
+							$('.action-inputs').css("left","-1000vw");
+
+							e.preventDefault();
+						}
+					});
+
+					// if ($('#action-newfolder').length) {
+
+					// 	var foldernameInput = document.getElementById("new-foldername");
+
+						// Execute a function when the user releases a key on the keyboard
+						// foldernameInput.addEventListener("keyup", function(e) {
+
+							// Number 13 is the "Enter" key on the keyboard
+					// 		if (e.keyCode == 13 ) {
+
+					// 			e.preventDefault();
+
+					// 			document.getElementById("create-folder").click();
+
+					// 			$('.action-inputs').css("position","absolute");
+					// 			$('.action-inputs').css("left","-1000vw");
+
+					// 		}
+
+					// 	});
+
+					// }
+
 				} else {
 					const actionButtonsDiv = document.getElementById('action-buttons');
 					if (actionButtonsDiv.childNodes.length > 0) {
 						const actionInputsDiv = document.getElementById('action-inputs');
 						actionButtonsDiv.innerHTML = "";
 						actionInputsDiv.innerHTML = "";
+						$('.action-inputs').css("position","absolute");
+						$('.action-inputs').css("left","-1000vw");
 					}
 				}
 				$.each(data.results,function(k,v){
@@ -188,11 +315,15 @@
 
 		$.get('?page=simple-file-manager&do=createfile&_cfilenonce=' + createFileNonce + '&file='+ hashval + '%2F' + fileName,function(data) {
 
+			const actionInputsDiv = document.getElementById('action-inputs');
+
 			if(data.success) {
 				$('.cancel-newfile').click();
 				$('#new-filename').val('');
+				actionInputsDiv.innerHTML = "";
 				list();
 			} else {
+				actionInputsDiv.innerHTML = "";
 				alert(data.message);
 			}
 
@@ -206,11 +337,15 @@
 
 		$.get('?page=simple-file-manager&do=createfolder&_cfoldernonce=' + createFolderNonce + '&file='+ hashval + '%2F' + folderName,function(data) {
 
+			const actionInputsDiv = document.getElementById('action-inputs');
+
 			if(data.success) {
 				$('.cancel-newfolder').click();
 				$('#new-foldername').val('');
+				actionInputsDiv.innerHTML = "";
 				list();
 			} else {
+				actionInputsDiv.innerHTML = "";
 				alert(data.message);
 			}
 
@@ -261,117 +396,6 @@
 			'json');
 			return false;
 		});
-
-		$('.newfile-button').on('click', function(e) {
-
-			e.preventDefault();
-
-			$('.action-inputs').css("position","initial");
-			$('.action-inputs').css("left","unset");
-			$('.action-newfile').css("visibility","visible");
-			$('.action-newfile').css("height","auto");
-
-			$('.action-newfolder').css("visibility","hidden");
-			$('.action-newfolder').css("height","0px");
-
-		});
-
-		$('.newfolder-button').on('click', function(e) {
-
-			e.preventDefault();
-
-			$('.action-inputs').css("position","initial");
-			$('.action-inputs').css("left","unset");
-			$('.action-newfolder').css("visibility","visible");
-			$('.action-newfolder').css("height","auto");
-
-			$('.action-newfile').css("visibility","hidden");
-			$('.action-newfile').css("height","0px");
-
-		});
-
-		$('.cancel-action').on('click', function(e) {
-
-			e.preventDefault();
-
-			$('.action-inputs').css("position","absolute");
-			$('.action-inputs').css("left","-1000vw");
-
-			$('.action-newfile').css("visibility","hidden");
-			$('.action-newfile').css("height","0px");
-			$('.action-newfolder').css("visibility","hidden");
-			$('.action-newfolder').css("height","0px");
-
-		});
-
-		// Create file
-
-		$('#create-file').on('click', function(e) {
-			var fileName = document.getElementById("new-filename").value;
-
-			if (fileName === "") {
-				alert("Please enter the file name first.");
-				e.preventDefault();
-			} else {
-				createFile(fileName);
-				e.preventDefault();
-			}
-		});
-
-		if ($('#action-newfile').length) {
-
-
-			var filenameInput = document.getElementById("new-filename");
-
-			// Execute a function when the user releases a key on the keyboard
-			filenameInput.addEventListener("keyup", function(e) {
-
-				// Number 13 is the "Enter" key on the keyboard
-				if (e.keyCode == 13 ) {
-
-					e.preventDefault();
-
-					document.getElementById("create-file").click();
-
-				}
-
-			});
-
-		}
-
-		// Create folder
-
-		$('#create-folder').on('click', function(e) {
-			var folderName = document.getElementById("new-foldername").value;
-
-			if (folderName === "") {
-				alert("Please enter the folder name first.");
-				e.preventDefault();
-			} else {
-				createFolder(folderName);
-				e.preventDefault();
-			}
-		});
-
-		if ($('#action-newfolder').length) {
-
-			var foldernameInput = document.getElementById("new-foldername");
-
-			// Execute a function when the user releases a key on the keyboard
-			foldernameInput.addEventListener("keyup", function(e) {
-
-				// Number 13 is the "Enter" key on the keyboard
-				if (e.keyCode == 13 ) {
-
-					e.preventDefault();
-
-					document.getElementById("create-folder").click();
-
-				}
-
-			});
-
-		}
 
 	});
 
