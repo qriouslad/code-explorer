@@ -223,17 +223,17 @@ class Code_Explorer_Admin {
 
 			}
 
+			// Create nonces
+
+            $create_file_nonce = wp_create_nonce( 'create-file_' . $_COOKIE['_sfm_xsrf'] . $uid );
+            $create_folder_nonce = wp_create_nonce( 'create-folder_'. $_COOKIE['_sfm_xsrf'] . $uid );
+			$deletion_nonce = wp_create_nonce( 'deletion-nonce_' . $_COOKIE['_ce_xsrf'] . $uid );
+
 			if ( ( isset( $_GET['do'] ) ) && ( $_GET['do'] == 'list' ) ) {
 
 				// Define variables early / with default values
 				
 				$show_action_buttons = false;
-
-				// Create nonces for javascript
-
-                $create_file_nonce = wp_create_nonce( 'create-file_' . $_COOKIE['_sfm_xsrf'] . $uid );
-                $create_folder_nonce = wp_create_nonce( 'create-folder_'. $_COOKIE['_sfm_xsrf'] . $uid );
-				$deletion_nonce = wp_create_nonce( 'deletion-nonce_' . $_COOKIE['_ce_xsrf'] . $uid );
 
 				// Check if file and theme editor is disabled
 
@@ -418,8 +418,6 @@ class Code_Explorer_Admin {
 						'abspath_hash' => $abspath_hash,
 						'editing_enabled' => $editing_enabled,
 						'show_action_buttons' => $show_action_buttons,
-						'create_file_nonce' => $create_file_nonce,
-						'create_folder_nonce' => $create_folder_nonce,
 						'results' =>$result
 					]);
 					exit;
@@ -649,9 +647,18 @@ class Code_Explorer_Admin {
 
 				$html_output .= '<div id="top">
 									<div id="breadcrumb">&nbsp;</div>
-									<div id="action-buttons" class="action-buttons"></div>
+									<div id="action-buttons" class="action-buttons">
+										<button class="button action newfile-button">&#10010; File</button><button class="button action newfolder-button">&#10010; Folder</button>
+									</div>
 								</div>';
-				$html_output .= '<div id="action-inputs" class="action-inputs"></div>';
+				$html_output .= '<div id="action-inputs" class="action-inputs">
+									<div class="action-newfile">
+										<input type="text" name="new-filename" id="new-filename" value="" placeholder="e.g. filename.php"><input type="hidden" name="_cfilenonce" id="create-file-nonce" value="' . esc_attr( $create_file_nonce ) . '" /><button id="create-file" class="button action button-primary create-file">Create File</button><button class="button action cancel-action cancel-newfile">Cancel</button>
+									</div>
+									<div class="action-newfolder">
+										<input type="text" name="new-foldername" id="new-foldername" value="" placeholder="e.g. folder-name"><input type="hidden" name="_cfoldernonce" id="create-folder-nonce" value="' . esc_attr( $create_folder_nonce ) . '" /><button  id="create-folder" class="button action button-primary create-folder">Create Folder</button><button class="button action cancel-action cancel-newfolder">Cancel</button>
+									</div>
+								</div>';
 				$html_output .= '<table id="table"><thead><tr>
 									<th>Name</th>
 									<th class="th-actions">Actions</th>
