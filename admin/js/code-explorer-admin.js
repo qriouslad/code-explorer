@@ -31,8 +31,168 @@
 
 	var XSRF = (document.cookie.match('(^|; )_ce_xsrf=([^;]*)')||0)[2];
 
-	$(window).on('load',list);
-	$(window).on('hashchange',list).trigger('hashchange');
+	$(window).on('load', function() {
+		list();
+	});
+
+	$(window).on('hashchange', function() {
+		list();
+	});
+
+	// $(document).ajaxComplete(function() {
+	// });
+
+	$(document).ready( function() {
+
+        // Remove codestar <form> parent element
+        // https://bobbyhadz.com/blog/javascript-remove-parent-element
+
+        const child = $('.csf-header')[0];
+
+        child.parentElement.replaceWith(...child.parentElement.childNodes);
+
+        // Remove codestar hidden inputs
+        $('.csf-section-id').remove();
+        $('#csf_options_noncedatabase-admin').remove();
+        $('input[name="_wp_http_referer"]').remove();
+
+        // Add review, feedback and donate buttons
+
+        var addReview = '<a href="https://wordpress.org/plugins/code-explorer/#reviews" target="_blank" class="header-action"><span>&starf;</span> Review</a>';
+        var giveFeedback = '<a href="https://wordpress.org/support/plugin/code-explorer/" target="_blank" class="header-action">&#10010; Feedback</a>';
+        var donate = '<a href="https://paypal.me/qriouslad" target="_blank" class="header-action">&#10084; Donate</a>';
+
+        $(donate).prependTo('.ce .csf-header-right');
+        $(giveFeedback).prependTo('.ce .csf-header-right');
+        $(addReview).prependTo('.ce .csf-header-right');
+
+		var urlParams = new URLSearchParams(window.location.search);
+
+		// If not on a 'do=view' page, i.e. file viewer.
+		if ( ! urlParams.has('do') ) {
+
+		// Delete file / folder
+
+			$('#table').on('click','.delete',function(data) {
+				$.post("",{
+					'do': 'delete',
+					'file': $(this).attr('data-file'),
+					'nonce': $(this).attr('data-nonce'),
+					'xsrf': XSRF
+				},
+				function(data){
+
+					if ( data.success ) {
+						list();
+					} else {
+						alert( 'Oops, something went wrong...' );
+					}
+				},
+				'json');
+				return false;
+			});
+
+			// Create file or folder
+
+			$('.newfile-button').on('click', function(e) {
+
+				e.preventDefault();
+
+				$('.action-inputs').css("position","initial");
+				$('.action-inputs').css("left","unset");
+				$('.action-newfile').css("visibility","visible");
+				$('.action-newfile').css("height","auto");
+
+				$('.action-newfolder').css("visibility","hidden");
+				$('.action-newfolder').css("height","0px");
+
+			});
+
+			$('.newfolder-button').on('click', function(e) {
+
+				e.preventDefault();
+
+				$('.action-inputs').css("position","initial");
+				$('.action-inputs').css("left","unset");
+				$('.action-newfolder').css("visibility","visible");
+				$('.action-newfolder').css("height","auto");
+
+				$('.action-newfile').css("visibility","hidden");
+				$('.action-newfile').css("height","0px");
+
+			});
+
+			$('.cancel-action').on('click', function(e) {
+
+				e.preventDefault();
+
+				$('.action-inputs').css("position","absolute");
+				$('.action-inputs').css("left","-1000vw");
+
+				$('.action-newfile').css("visibility","hidden");
+				$('.action-newfile').css("height","0px");
+				$('.action-newfolder').css("visibility","hidden");
+				$('.action-newfolder').css("height","0px");
+
+			});
+
+			// Create file
+
+			$('#create-file').on('click', function(e) {
+				var fileName = document.getElementById("new-filename").value;
+
+				if (fileName === "") {
+					alert("Please enter the file name first.");
+					e.preventDefault();
+				} else {
+					createFile(fileName);
+					e.preventDefault();
+				}
+			});
+
+			var filenameInput = document.getElementById("new-filename");
+
+			// Execute a function when the user releases a key on the keyboard
+			filenameInput.addEventListener("keyup", function(e) {
+
+				// Number 13 is the "Enter" key on the keyboard
+				if (e.keyCode == 13 ) {
+					e.preventDefault();
+					document.getElementById("create-file").click();
+				}
+
+			});
+
+			// Create folder
+
+			$('#create-folder').on('click', function(e) {
+				var folderName = document.getElementById("new-foldername").value;
+
+				if (folderName === "") {
+					alert("Please enter the folder name first.");
+					e.preventDefault();
+				} else {
+					createFolder(folderName);
+					e.preventDefault();
+				}
+			});
+
+			var foldernameInput = document.getElementById("new-foldername");
+
+			// Execute a function when the user releases a key on the keyboard
+			foldernameInput.addEventListener("keyup", function(e) {
+
+				// Number 13 is the "Enter" key on the keyboard
+				if (e.keyCode == 13 ) {
+					e.preventDefault();
+					document.getElementById("create-folder").click();
+				}
+
+			});
+
+		}
+
+	});
 
 	function list() {
 
@@ -45,151 +205,9 @@
 
 			if (data.success) {
 				if (data.show_action_buttons) {
-					const actionButtonsDiv = document.getElementById('action-buttons');
-					const actionButtons = '<button class="button action newfile-button">&#10010; File</button><button class="button action newfolder-button">&#10010; Folder</button>';
-					if (actionButtonsDiv.childNodes.length === 0) {
-						$('#action-buttons').append(actionButtons);
-					}
-					const actionInputsDiv = document.getElementById('action-inputs');
-					const createFileInput = '<div id="action-newfile" class="action-newfile"><input type="text" name="new-filename" id="new-filename" value="" placeholder="e.g. filename.php"><input type="hidden" name="_cfilenonce" id="create-file-nonce" value="' + data.create_file_nonce + '" /><button id="create-file" class="button action button-primary create-file">Create File</button><button class="button action cancel-action cancel-newfile">Cancel</button></div>';
-					const createFolderInput = '<div id="action-newfolder" class="action-newfolder"><input type="text" name="new-foldername" id="new-foldername" value="" placeholder="e.g. folder-name"><input type="hidden" name="_cfoldernonce" id="create-folder-nonce" value="' + data.create_folder_nonce + '" /><button  id="create-folder" class="button action button-primary create-folder">Create Folder</button><button class="button action cancel-action cancel-newfolder">Cancel</button></div>';
-					if (actionInputsDiv.childNodes.length === 0) {
-						$('#action-inputs').append(createFileInput + createFolderInput);
-					}
-
-					$('.newfile-button').on('click', function(e) {
-
-						e.preventDefault();
-
-						$('.action-inputs').css("position","initial");
-						$('.action-inputs').css("left","unset");
-						$('.action-newfile').css("visibility","visible");
-						$('.action-newfile').css("height","auto");
-
-						$('.action-newfolder').css("visibility","hidden");
-						$('.action-newfolder').css("height","0px");
-
-					});
-
-					$('.newfolder-button').on('click', function(e) {
-
-						e.preventDefault();
-
-						$('.action-inputs').css("position","initial");
-						$('.action-inputs').css("left","unset");
-						$('.action-newfolder').css("visibility","visible");
-						$('.action-newfolder').css("height","auto");
-
-						$('.action-newfile').css("visibility","hidden");
-						$('.action-newfile').css("height","0px");
-
-					});
-
-					$('.cancel-action').on('click', function(e) {
-
-						e.preventDefault();
-
-						$('.action-inputs').css("position","absolute");
-						$('.action-inputs').css("left","-1000vw");
-
-						$('.action-newfile').css("visibility","hidden");
-						$('.action-newfile').css("height","0px");
-						$('.action-newfolder').css("visibility","hidden");
-						$('.action-newfolder').css("height","0px");
-
-					});
-
-					// Create file
-
-					$('#create-file').on('click', function(e) {
-						var fileName = document.getElementById("new-filename").value;
-
-						if (fileName === "") {
-							alert("Please enter the file name first.");
-							e.preventDefault();
-						} else {
-							createFile(fileName);
-
-							$('.action-inputs').css("position","absolute");
-							$('.action-inputs').css("left","-1000vw");
-
-							e.preventDefault();
-						}
-					});
-
-					// if ($('#action-newfile').length) {
-
-						// var filenameInput = document.getElementById("new-filename");
-
-						// Execute a function when the user releases a key on the keyboard
-						// filenameInput.addEventListener("keyup", function(e) {
-
-							// Number 13 is the "Enter" key on the keyboard
-					// 		if (e.keyCode == 13 ) {
-
-					// 			e.preventDefault();
-
-					// 			document.getElementById("create-file").click();
-
-					// 			$('.action-inputs').css("position","absolute");
-					// 			$('.action-inputs').css("left","-1000vw");
-
-					// 		}
-
-					// 	});
-
-					// }
-
-					// Create folder
-
-					$('#create-folder').on('click', function(e) {
-						var folderName = document.getElementById("new-foldername").value;
-
-						if (folderName === "") {
-							alert("Please enter the folder name first.");
-							e.preventDefault();
-						} else {
-							createFolder(folderName);
-
-							$('.action-inputs').css("position","absolute");
-							$('.action-inputs').css("left","-1000vw");
-
-							e.preventDefault();
-						}
-					});
-
-					// if ($('#action-newfolder').length) {
-
-					// 	var foldernameInput = document.getElementById("new-foldername");
-
-						// Execute a function when the user releases a key on the keyboard
-						// foldernameInput.addEventListener("keyup", function(e) {
-
-							// Number 13 is the "Enter" key on the keyboard
-					// 		if (e.keyCode == 13 ) {
-
-					// 			e.preventDefault();
-
-					// 			document.getElementById("create-folder").click();
-
-					// 			$('.action-inputs').css("position","absolute");
-					// 			$('.action-inputs').css("left","-1000vw");
-
-					// 		}
-
-					// 	});
-
-					// }
-
+					$('.action-buttons').css("visibility","visible");
 				} else {
-					const actionButtonsDiv = document.getElementById('action-buttons');
-					if (actionButtonsDiv.childNodes.length > 0) {
-						const actionInputsDiv = document.getElementById('action-inputs');
-						actionButtonsDiv.innerHTML = "";
-						actionInputsDiv.innerHTML = "";
-						$('.action-inputs').css("position","absolute");
-						$('.action-inputs').css("left","-1000vw");
-					}
+					$('.action-buttons').css("visibility","hidden");
 				}
 				$.each(data.results,function(k,v){
 					$('#list').append(renderFileRow(v));
@@ -351,52 +369,5 @@
 
 		},'json');
 	}
-
-	$(document).ready( function() {
-
-        // Remove codestar <form> parent element
-        // https://bobbyhadz.com/blog/javascript-remove-parent-element
-
-        const child = $('.csf-header')[0];
-
-        child.parentElement.replaceWith(...child.parentElement.childNodes);
-
-        // Remove codestar hidden inputs
-        $('.csf-section-id').remove();
-        $('#csf_options_noncedatabase-admin').remove();
-        $('input[name="_wp_http_referer"]').remove();
-
-        // Add review, feedback and donate buttons
-
-        var addReview = '<a href="https://wordpress.org/plugins/code-explorer/#reviews" target="_blank" class="header-action"><span>&starf;</span> Review</a>';
-        var giveFeedback = '<a href="https://wordpress.org/support/plugin/code-explorer/" target="_blank" class="header-action">&#10010; Feedback</a>';
-        var donate = '<a href="https://paypal.me/qriouslad" target="_blank" class="header-action">&#10084; Donate</a>';
-
-        $(donate).prependTo('.ce .csf-header-right');
-        $(giveFeedback).prependTo('.ce .csf-header-right');
-        $(addReview).prependTo('.ce .csf-header-right');
-
-		// Delete file / folder
-
-		$('#table').on('click','.delete',function(data) {
-			$.post("",{
-				'do': 'delete',
-				'file': $(this).attr('data-file'),
-				'nonce': $(this).attr('data-nonce'),
-				'xsrf': XSRF
-			},
-			function(data){
-
-				if ( data.success ) {
-					list();
-				} else {
-					alert( 'Oops, something went wrong...' );
-				}
-			},
-			'json');
-			return false;
-		});
-
-	});
 
 })( jQuery );

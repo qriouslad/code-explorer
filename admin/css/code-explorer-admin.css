@@ -76,6 +76,7 @@
     width: 23%;
     display: flex;
     justify-content: flex-end;
+    visibility: hidden;
 }
 
 .ce .action-buttons button {

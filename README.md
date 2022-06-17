@@ -48,7 +48,12 @@ Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/
 
 ## Changelog
 
-### 1.4.0 (2022.06.16)
+### 1.4.2 (2022.06.17)
+
+* Full fix for "Create file" / "Create folder" buggy interaction on click
+* Improve security by escaping additional HTML attributes
+
+### 1.4.1 (2022.06.16)
 
 * Partial fix for "Create file" / "Create folder" buggy interaction on click
 
