@@ -5,7 +5,7 @@ Donate link: https://paypal.me/qriouslad
 Tags: directory browser, file explorer, code viewer, developer  
 Requires at least: 4.8  
 Tested up to: 6.0  
-Stable tag: 1.4.1  
+Stable tag: 1.4.3  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,9 +16,14 @@ Fast directory explorer and file/code viewer with syntax highlighting.
 
 ## Description
 
-Code Explorer allows you to swiftly browse through the directories and files in your WordPress installation. A good alternative to a full-fledged [File Manager](https://wordpress.org/plugins/wp-file-manager/) if your primary focus is **viewing directory content and the code inside the files** for your dev work, e.g. WordPress core files or theme/plugins files. It uses [CodeMirror](https://codemirror.net/) to **highlight code syntax in files** commonly used throughout the WordPress development cycle such as PHP, HTML, Javascript, CSS, JSON and Markdown files.
+Code Explorer allows you to: 
 
-You can also edit theme and plugin files using WordPress core's file editor if it is not disabled via the DISALLOW_FILE_EDIT constant. Do proceed with great caution in editing as you can break your site if you don't know what you're doing. Since version 1.4.0, you can also create empty files and empty folders inside the /themes and /plugins folders. The files created can then be edited using core's theme/plugin editor.
+* **Swiftly browse through the directories** in your WordPress installation with an AJAX-driven interface. 
+* **Conveniently view the code in files with syntax highlighting** (using [CodeMirror](https://codemirror.net/)). It covers files commonly used throughout the WordPress development cycle such as PHP, HTML, Javascript, CSS, JSON and Markdown files.
+* **Securely edit theme and plugin files** using WordPress core's file editor. Since v1.4.0, you can also create empty files and folders inside the /themes and /plugins folders, which can then be edited.
+
+This way, Code Explorer is a good alternative to a full-fledged [File Manager](https://wordpress.org/plugins/wp-file-manager/) or (S)FTP if your primary focus is viewing code in WordPress core, themes or plugins. It may also be useful to enable quick prototyping of themes or plugins in your teaching / workshop.
+
 
 ### Give Back
 
@@ -47,6 +52,10 @@ You can also edit theme and plugin files using WordPress core's file editor if i
 Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/devinvinson/WordPress-Plugin-Boilerplate/) | [wppb.me](https://wppb.me/) | [CodeStar framework](https://github.com/Codestar/codestar-framework). Code Explorer is based on the [Simple File Manager](https://github.com/jcampbell1/simple-file-manager) library by [John Campbell](https://github.com/jcampbell1).
 
 ## Changelog
+
+### 1.4.3 (2022.06.19)
+
+* Fix CSS height issue of the file/code viewer
 
 ### 1.4.2 (2022.06.17)
 
