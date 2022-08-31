@@ -5,7 +5,7 @@ Donate link: https://paypal.me/qriouslad
 Tags: directory browser, file explorer, code viewer, developer  
 Requires at least: 4.8  
 Tested up to: 6.0  
-Stable tag: 1.4.3  
+Stable tag: 1.4.4  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -22,7 +22,7 @@ Code Explorer allows you to:
 * **Conveniently view the code in files with syntax highlighting** (using [CodeMirror](https://codemirror.net/)). It covers files commonly used throughout the WordPress development cycle such as PHP, HTML, Javascript, CSS, JSON and Markdown files.
 * **Securely edit theme and plugin files** using WordPress core's file editor. Since v1.4.0, you can also create empty files and folders inside the /themes and /plugins folders, which can then be edited.
 
-This way, Code Explorer is a good alternative to a full-fledged [File Manager](https://wordpress.org/plugins/wp-file-manager/) or (S)FTP if your primary focus is viewing code in WordPress core, themes or plugins. It may also be useful to enable quick prototyping of themes or plugins in your teaching / workshop.
+This way, Code Explorer is a good alternative to a full-fledged [File Manager](https://wordpress.org/plugins/wp-file-manager/) if your primary focus is viewing code in WordPress core, themes or plugins. It may also be useful to enable quick prototyping of themes or plugins in your teaching / workshop.
 
 
 ### Give Back
@@ -52,6 +52,11 @@ This way, Code Explorer is a good alternative to a full-fledged [File Manager](h
 Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/devinvinson/WordPress-Plugin-Boilerplate/) | [wppb.me](https://wppb.me/) | [CodeStar framework](https://github.com/Codestar/codestar-framework). Code Explorer is based on the [Simple File Manager](https://github.com/jcampbell1/simple-file-manager) library by [John Campbell](https://github.com/jcampbell1).
 
 ## Changelog
+
+### 1.4.4 (2022.08.31)
+
+* Make height of file/code viewer as tall as the content lenght to allow for proper next/previous clicking of in-browser searching
+* Fix for several PHP warning issues
 
 ### 1.4.3 (2022.06.19)
 
