@@ -275,7 +275,7 @@
 /* CodeMirror */
 
 .ce .CodeMirror {
-    height: 80vh !important;
+    height: 100% !important;
 }
 
 .ce #editor-content textarea {

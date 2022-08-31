@@ -157,6 +157,9 @@ class Code_Explorer_Admin {
 	 */
 	public function ce_index() {
 
+		// Set initial value
+		$is_editable = false;
+
 		// Limit file manager access only to site admins
 		if ( current_user_can( 'manage_options' ) ) {
 
@@ -180,7 +183,7 @@ class Code_Explorer_Admin {
 
 			// Set cookie and get/set user ID for use in nonces
 
-			if( !$_COOKIE['_ce_xsrf'] ) {
+			if ( ! array_key_exists( '_ce_xsrf', $_COOKIE ) ) {
 				setcookie( '_ce_xsrf', bin2hex( openssl_random_pseudo_bytes( 16 ) ) );
 			}
 
@@ -408,7 +411,11 @@ class Code_Explorer_Admin {
 					usort($result,function($f1,$f2){
 						$f1_key = ($f1['is_dir']?:2) . $f1['name'];
 						$f2_key = ($f2['is_dir']?:2) . $f2['name'];
-						return $f1_key > $f2_key;
+						if ( $f1_key > $f2_key ) {
+							return true;
+						} else {
+							return false;
+						}
 					});
 
 					echo json_encode([
