@@ -3,6 +3,10 @@
  * included in this file.
  */
 
+#screen-meta-links {
+    display: none;
+}
+
 .ce .csf-header-inner {
     background-color: #fafafa;
     border-bottom: 1px solid #f5f5f5;
