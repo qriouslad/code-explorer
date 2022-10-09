@@ -159,6 +159,8 @@ class Code_Explorer_Admin {
 
 		// Set initial value
 		$is_editable = false;
+		$editable_type = '';
+		$edit_selector = '';
 
 		// Limit file manager access only to site admins
 		if ( current_user_can( 'manage_options' ) ) {
@@ -294,8 +296,6 @@ class Code_Explorer_Admin {
 
 							} else {
 
-									$edit_selector = '';
-
 									if ( strpos( $path, 'wp-content/themes' ) !== false ) {
 
 										$path_parts = explode( "/", $relpath );
@@ -411,11 +411,10 @@ class Code_Explorer_Admin {
 					usort($result,function($f1,$f2){
 						$f1_key = ($f1['is_dir']?:2) . $f1['name'];
 						$f2_key = ($f2['is_dir']?:2) . $f2['name'];
-						if ( $f1_key > $f2_key ) {
-							return true;
-						} else {
-							return false;
+						if ( $f1_key == $f2_key ) {
+							return 0;
 						}
+						return ( $f1_key < $f2_key ) ? -1 : 1;
 					});
 
 					echo json_encode([
