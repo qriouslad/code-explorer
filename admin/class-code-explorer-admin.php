@@ -206,33 +206,28 @@ class Code_Explorer_Admin {
 
 			// Set the directory/file path
 
-			if ( isset( $_REQUEST['file'] ) ) {
+			if ( isset( $_REQUEST['file'] ) && ! empty( $_REQUEST['file'] ) ) {
 
 				$file_path = sanitize_url( $_REQUEST['file'] );
-
-				$relpath = str_replace( ABSPATH, '', $file_path );
-
-				if ( !empty( $file_path ) ) {
-
+				
+				if ( false !== strpos( $file_path, ABSPATH ) ) {
+					$relpath = str_replace( ABSPATH, '', $file_path );
 					$file = $file_path;
-
 				} else {
-
 					$file = $abspath;
-
 				}
 
 			} else {
-
 				$file = $abspath;
-
 			}
 
 			// Create nonces
+			$_sfm_xsrf = isset( $_COOKIE['_sfm_xsrf'] ) ? $_COOKIE['_sfm_xsrf'] : '';
+			$_ce_xsrf = isset( $_COOKIE['_ce_xsrf'] ) ? $_COOKIE['_ce_xsrf'] : '';
 
-            $create_file_nonce = wp_create_nonce( 'create-file_' . $_COOKIE['_sfm_xsrf'] . $uid );
-            $create_folder_nonce = wp_create_nonce( 'create-folder_'. $_COOKIE['_sfm_xsrf'] . $uid );
-			$deletion_nonce = wp_create_nonce( 'deletion-nonce_' . $_COOKIE['_ce_xsrf'] . $uid );
+            $create_file_nonce = wp_create_nonce( 'create-file_' . $_sfm_xsrf . $uid );
+            $create_folder_nonce = wp_create_nonce( 'create-folder_'. $_sfm_xsrf . $uid );
+			$deletion_nonce = wp_create_nonce( 'deletion-nonce_' . $_ce_xsrf . $uid );
 
 			if ( ( isset( $_GET['do'] ) ) && ( $_GET['do'] == 'list' ) ) {
 
@@ -531,7 +526,7 @@ class Code_Explorer_Admin {
 
 					$nonce = $_GET['_cfilenonce'];
 
-					if ( !empty( $nonce ) && wp_verify_nonce( $nonce, 'create-file_' . $_COOKIE['_sfm_xsrf'] . $uid ) ) {
+					if ( !empty( $nonce ) && wp_verify_nonce( $nonce, 'create-file_' . $_sfm_xsrf . $uid ) ) {
 
 						$result = file_put_contents( $file, '' );
 
@@ -584,7 +579,7 @@ class Code_Explorer_Admin {
 
 					$nonce = $_GET['_cfoldernonce'];
 
-					if ( !empty( $nonce ) && wp_verify_nonce( $nonce, 'create-folder_' . $_COOKIE['_sfm_xsrf'] . $uid ) ) {
+					if ( !empty( $nonce ) && wp_verify_nonce( $nonce, 'create-folder_' . $_sfm_xsrf . $uid ) ) {
 
 						mkdir( $file );
 
@@ -621,7 +616,7 @@ class Code_Explorer_Admin {
 
 					$nonce = $_POST['nonce'];
 
-					if ( !empty( $nonce ) && wp_verify_nonce( $nonce, 'deletion-nonce_' . $_COOKIE['_ce_xsrf'] . $uid ) ) {
+					if ( !empty( $nonce ) && wp_verify_nonce( $nonce, 'deletion-nonce_' . $_ce_xsrf . $uid ) ) {
 
 						$this->ce_delete_recursively( $file );
 
