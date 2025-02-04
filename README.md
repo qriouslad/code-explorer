@@ -4,8 +4,8 @@ Contributors: qriouslad
 Donate link: https://paypal.me/qriouslad  
 Tags: directory browser, file explorer, code viewer, developer  
 Requires at least: 4.8  
-Tested up to: 6.0  
-Stable tag: 1.4.5  
+Tested up to: 6.7.1  
+Stable tag: 1.4.6  
 Requires PHP: 5.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -59,6 +59,7 @@ Code Explorer was built with: [WordPress Plugin Boilerplate](https://github.com/
 ### 1.4.6 (2025.02.04)
 
 * Fixed security vulnerability Authenticated (Admin+) External File Reading responsibly disclosed by Dmitrii Ignatyev via Wordfence.
+* Fixed PHP warning - undefined array_key `_sfm_xsrf`
 
 ### 1.4.5 (2022.10.09)
 
