@@ -204,26 +204,19 @@ class Code_Explorer_Admin {
 
 			// Set the directory/file path
 
-			if ( isset( $_REQUEST['file'] ) ) {
+			if ( isset( $_REQUEST['file'] ) && ! empty( $_REQUEST['file'] ) ) {
 
 				$file_path = sanitize_url( $_REQUEST['file'] );
-
-				$relpath = str_replace( ABSPATH, '', $file_path );
-
-				if ( !empty( $file_path ) ) {
-
+				
+				if ( false !== strpos( $file_path, ABSPATH ) ) {
+					$relpath = str_replace( ABSPATH, '', $file_path );
 					$file = $file_path;
-
 				} else {
-
 					$file = $abspath;
-
 				}
 
 			} else {
-
 				$file = $abspath;
-
 			}
 
 			// Create nonces
